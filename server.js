@@ -8,7 +8,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = 8080;
 
 // Middleware
 app.use(cors());
@@ -33,11 +33,11 @@ const razorpay = new Razorpay({
 // Create Order API
 app.post('/api/create-order', async (req, res) => {
   try {
-    const { 
-      userId, 
-      userEmail, 
-      items, 
-      totalAmount, 
+    const {
+      userId,
+      userEmail,
+      items,
+      totalAmount,
       userDetails,
       amount // Amount in paise
     } = req.body;
@@ -112,11 +112,11 @@ app.post('/api/create-order', async (req, res) => {
 // Verify Payment API
 app.post('/api/verify-payment', async (req, res) => {
   try {
-    const { 
-      razorpay_order_id, 
-      razorpay_payment_id, 
+    const {
+      razorpay_order_id,
+      razorpay_payment_id,
       razorpay_signature,
-      firebaseOrderId 
+      firebaseOrderId
     } = req.body;
 
     // Create signature for verification
@@ -199,9 +199,9 @@ app.post('/api/update-order-status', async (req, res) => {
 app.get('/api/order/:orderId', async (req, res) => {
   try {
     const { orderId } = req.params;
-    
+
     const orderDoc = await db.collection('orders').doc(orderId).get();
-    
+
     if (!orderDoc.exists) {
       return res.status(404).json({
         success: false,
@@ -230,7 +230,7 @@ app.get('/api/order/:orderId', async (req, res) => {
 app.get('/api/orders/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
-    
+
     const ordersSnapshot = await db
       .collection('orders')
       .where('userId', '==', userId)
@@ -287,7 +287,6 @@ app.use('*', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
-  console.log(`Health check: http://localhost:${PORT}/api/health`);
 });
 
 module.exports = app;
